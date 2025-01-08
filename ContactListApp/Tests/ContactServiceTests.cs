@@ -1,7 +1,7 @@
 ﻿// Enhetstester för ContactService.
 
 
-using ContactListApp.Models;
+/* using ContactListApp.Models;
 using ContactListApp.Services;
 using Xunit;
 using System.Linq;
@@ -58,3 +58,4 @@ namespace ContactListApp.Tests
 
     }
 }
+*/

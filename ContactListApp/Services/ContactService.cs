@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using ContactListApp.Models;
+using ContactListApp.Utilities;
 using System.Linq;
 using ContactListApp.Data;
 using System;
@@ -11,31 +12,68 @@ namespace ContactListApp.Services
 {
     public class ContactService
     {
-        private readonly ContactRepository _repository;
+        ContactRepository contactRepository;
 
-        public ContactService(ContactRepository repository)
+        public ContactService(ContactRepository contactRepository)
         {
-            _repository = repository;
+            this.contactRepository = contactRepository;
         }
 
-        // Lägg till en kontakt och uppdatera filen
-        public void AddContact(Contact contact)
+        public void AddContact()
         {
-            // Ladda alla befintliga kontakter
-            var contacts = _repository.LoadContacts().ToList();
-
-            // Lägg till den nya kontakten
-            contact.Id = Guid.NewGuid();  // Se till att kontakten får ett unikt Id
-            contacts.Add(contact);
-
-            // Spara uppdaterad lista tillbaka till filen.
-            _repository.SaveContacts(contacts);
+            var contact = new Contact
+            {
+                Id = GuidGenerator.newID(),
+                FirstName = GetValidInput("Förnamn"),
+                LastName = GetValidInput("Efternamn"),
+                Email = GetValidInput("E-postadress"),
+                PhoneNumber = GetValidInput("Telefonnummer"),
+                StreetAddress = GetValidInput("Gatuadress"),
+                PostalCode = GetValidInput("Postnummer"),
+                City = GetValidInput("Ort"),
+            };
+            contactRepository.addContactToRepository(contact);
+            Console.WriteLine("Kontakten har lagts till!");
+            Console.WriteLine("Tryck på valfri tangent för att fortsätta...");
+            Console.ReadKey();
         }
 
-        // Hämta alla kontakter
-        public IEnumerable<Contact> GetAllContacts()
+        public void saveContacts()
         {
-            return _repository.LoadContacts();
+            contactRepository.saveContacts();
+        }
+
+        private static string GetValidInput(string fieldName)
+        {
+            string input;
+            do
+            {
+                Console.Write($"{fieldName}: ");
+                input = Console.ReadLine()?.Trim() ?? string.Empty;
+                if (string.IsNullOrEmpty(input))
+                {
+                    Console.WriteLine($"{fieldName} kan inte vara tomt. Försök igen.");
+                }
+            } while (string.IsNullOrEmpty(input));
+            return input;
+        }
+
+        public void listContacts()
+        {
+            List<Contact> contacts = (List<Contact>)contactRepository.getAll();
+            if (!contacts.Any())
+            {
+                Console.Clear();
+                Console.WriteLine("You have no contacts");
+                Console.ReadKey();
+            }
+            else {
+                foreach (Contact contact in contacts)
+                {
+                    contact.DisplayContact();
+                }
+            }
+            
         }
     }
 }

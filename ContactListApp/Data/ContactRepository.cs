@@ -1,39 +1,64 @@
-﻿// Hanterar läsning och skrivning av kontakter till/från en Json fil.
-
-
-using ContactListApp.Models;
-using Newtonsoft.Json;
-using System.IO;
-using System.Collections.Generic;
-using JsonFormatting = Newtonsoft.Json.Formatting;
-
+﻿using ContactListApp.Models;
+using System.Text.Json;
+using ContactListApp.Interfaces;
 
 
 namespace ContactListApp.Data
 {
-    public class ContactRepository
+    public class ContactRepository : IContactRepository
     {
         private readonly string _filePath;
+        // We keep contact here. Our Storage
+        private List<Contact> _contacts = new List<Contact>();
+        
 
         public ContactRepository(string filePath)
         {
-            _filePath = filePath;
+            _filePath = filePath ?? throw new ArgumentNullException(nameof(filePath), "Filvägen kan inte vara null.");
+            loadContacts();
         }
 
         // Läs in kontakter från filen.
-        public IEnumerable<Contact> LoadContacts()
+        public void loadContacts()
         {
             if (!File.Exists(_filePath))
-                return new List<Contact>();
- 
-            var jsonData = File.ReadAllText(_filePath);
-            return JsonConvert.DeserializeObject<List<Contact>>(jsonData) ?? new List<Contact>();
+            {
+                _contacts = new List<Contact>();
+                Console.WriteLine("You have 0 contacts saved now");
+                Console.ReadKey();
+            }
+            else {
+                try
+                {
+                    var jsonData = File.ReadAllText(_filePath);
+                    _contacts = JsonSerializer.Deserialize<List<Contact>>(jsonData) ?? new List<Contact>();
+                    Console.WriteLine("The length of contacs is " + _contacts.Count());
+                    Console.ReadKey();
+                }
+                catch (Exception e) {
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine("Error in loading contacts!");
+                }
+
+            }
+            
         }
 
-        public void SaveContacts(IEnumerable<Contact> contacts)
-        { 
-            var jsonData = JsonConvert.SerializeObject(contacts, JsonFormatting.Indented);
+        public void saveContacts()
+        {
+            
+            var jsonData = JsonSerializer.Serialize(_contacts, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_filePath, jsonData);
+        }
+
+        public void addContactToRepository(Contact contact)
+        {
+            _contacts.Add(contact);
+            saveContacts();
+        }
+        public IEnumerable<Contact> getAll()
+        {
+            return _contacts;
         }
     }
 }
