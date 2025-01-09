@@ -14,6 +14,7 @@ namespace ContactListApp
         static void Main(string[] args)
         {
             const string filePath = "C:\\projects\\ContactList copy\\ContactListApp\\json\\contacts.json";
+            Console.WriteLine($"Looking for file at: {filePath}");
 
             var repository = new ContactRepository(filePath);
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ContactListApp.Utilities
 {
-    class GuidGenerator
+    public class GuidGenerator
     {
         public static string newID() { 
             return Guid.NewGuid().ToString();
