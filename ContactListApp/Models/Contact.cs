@@ -20,7 +20,7 @@ namespace ContactListApp.Models
             Console.WriteLine($"Namn: {this.FirstName} {this.LastName}");
             Console.WriteLine($"E-post: {this.Email}");
             Console.WriteLine($"Telefon: {this.PhoneNumber}");
-            Console.WriteLine($"Adress: {this.StreetAddress}, {this.PostalCode} {this.City}");
+            Console.WriteLine($"Address: {this.StreetAddress}, {this.PostalCode} {this.City}");
             Console.WriteLine();
         }
     }

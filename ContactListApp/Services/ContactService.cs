@@ -6,6 +6,8 @@ using ContactListApp.Utilities;
 using System.Linq;
 using ContactListApp.Data;
 using System;
+using ContactListApp.DTOs;
+using ContactListApp.Mappers;
 
 
 namespace ContactListApp.Services
@@ -60,17 +62,17 @@ namespace ContactListApp.Services
 
         public void listContacts()
         {
-            List<Contact> contacts = (List<Contact>)contactRepository.getAll();
-            if (!contacts.Any())
+            List<ContactDTO> contactDTOS = (List<ContactDTO>)contactRepository.getAll();
+            if (!contactDTOS.Any())
             {
                 Console.Clear();
                 Console.WriteLine("You have no contacts");
                 Console.ReadKey();
             }
             else {
-                foreach (Contact contact in contacts)
+                foreach (ContactDTO contactDTO in contactDTOS)
                 {
-                    contact.DisplayContact();
+                    contactDTO.DisplayContact();
                 }
             }
             

@@ -1,6 +1,8 @@
 ﻿using ContactListApp.Models;
 using System.Text.Json;
 using ContactListApp.Interfaces;
+using ContactListApp.DTOs;
+using ContactListApp.Mappers;
 
 
 namespace ContactListApp.Data
@@ -32,7 +34,7 @@ namespace ContactListApp.Data
                 {
                     var jsonData = File.ReadAllText(_filePath);
                     _contacts = JsonSerializer.Deserialize<List<Contact>>(jsonData) ?? new List<Contact>();
-                    Console.WriteLine("The length of contacs is " + _contacts.Count());
+                    Console.WriteLine("The length of contacts is " + _contacts.Count());
                     Console.ReadKey();
                 }
                 catch (Exception e) {
@@ -56,9 +58,13 @@ namespace ContactListApp.Data
             _contacts.Add(contact);
             saveContacts();
         }
-        public IEnumerable<Contact> getAll()
+        public IEnumerable<ContactDTO> getAll()
         {
-            return _contacts;
+            List<ContactDTO> contactDTOS = new List<ContactDTO>();
+            foreach (Contact contact in _contacts) {
+                contactDTOS.Add(ContactMapper.toDTO(contact));
+            }
+            return contactDTOS;
         }
     }
 }

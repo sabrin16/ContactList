@@ -13,7 +13,7 @@ namespace ContactListApp
     {
         static void Main(string[] args)
         {
-            const string filePath = "C:\\projects\\ContactList\\ContactListApp\\json\\contacts.json";
+            const string filePath = "C:\\projects\\ContactList copy\\ContactListApp\\json\\contacts.json";
 
             var repository = new ContactRepository(filePath);
 
